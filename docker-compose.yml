@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+
+  client-backend:
+    image: task_management_system:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SERVER_PORT = 8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/task_management_system
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-16-alpine
+    environment:
+      POSTGRES_DB: task_management_system
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.utf8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
